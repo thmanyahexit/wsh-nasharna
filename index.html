@@ -81,7 +81,7 @@ a{color:inherit}
       <button id="resetBtn" type="button">رجّع التعديلات</button>
     </div>
     <div class="out" id="out" hidden></div>
-    <p class="mini">الحلقات تُسحب تلقائياً من قناة <a href="https://www.youtube.com/@thmanyahexit" target="_blank" rel="noopener">مخرج ثمانية</a> كل أسبوع (بدون الشورتس). تظهر آخر ثلاث حلقات، والتصميم يتغير حسب العدد (حلقة، حلقتين، ثلاث). لون البطاقة وشعار البرنامج يجون تلقائياً من اسم البرنامج. كل حلقة لها ستوري خاصة فيها رابطها: بطاقتها ملوّنة والباقي رمادي، بالترتيب من فوق لتحت. الكبسولة البيضاء الفاضية مكان ملصق الرابط، حط ملصق إنستقرام فوقها.</p>
+    <p class="mini">الحلقات تُسحب تلقائياً من قناة <a href="https://www.youtube.com/@thmanyahexit" target="_blank" rel="noopener">مخرج ثمانية</a> كل أسبوع (بدون الشورتس). تظهر آخر ثلاث حلقات، والتصميم يتغير حسب العدد (حلقة، حلقتين، ثلاث). لون البطاقة وشعار البرنامج يجون تلقائياً من اسم البرنامج. كل حلقة لها ستوري خاصة فيها رابطها: بطاقتها ملوّنة والباقي رمادي، بالترتيب من فوق لتحت. مكان ملصق الرابط متروك فاضي، حط ملصق إنستقرام فيه.</p>
   </div>
 </div>
 
@@ -195,7 +195,7 @@ function buildSVG(withFonts, act = active){
       body += `<image href="${c.logo.src}" x="${th.x + th.w - lw}" y="${py + PH/2 - lh2/2}" width="${lw}" height="${lh2}"/>`;
     }
     // empty white pill: room for the Instagram link sticker, on the highlighted card only
-    if (on) body += `<rect x="${px}" y="${py}" width="${L.pill.w}" height="${PH}" rx="${PH/2}" fill="#fff"/>`;
+    // link-sticker spot is left empty (no white pill)
   });
   const CH = 'قناة مخرج ٨ على اليوتيوب', chW = Math.max(290.03, measure(CH, 700, 25.86) + 16);
   window.__slots = slots;
