@@ -149,6 +149,10 @@ function cards(){
 
 let active = 0;   // which story is shown in the preview (one story per episode)
 const storyCount = () => Math.max(1, cards().length);
+// swash header/footer art (assets/*.png), inlined as data URLs so the PNG export keeps them
+const ART = {h:'', f:''};
+const artURL = u => fetch(u).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); }));
+Promise.all([artURL('assets/header.png'), artURL('assets/footer.png')]).then(([h, f]) => { ART.h = h; ART.f = f; render(); }).catch(() => {});
 function buildSVG(withFonts, act = active){
   const cs = cards();
   const fontCSS = withFonts ? `@font-face{font-family:"TS";font-weight:400;src:url(data:font/woff2;base64,${FONTS.r})}@font-face{font-family:"TS";font-weight:700;src:url(data:font/woff2;base64,${FONTS.b})}@font-face{font-family:"TS";font-weight:900;src:url(data:font/woff2;base64,${FONTS.k})}` : '';
@@ -212,7 +216,7 @@ function buildSVG(withFonts, act = active){
 <polygon points="280.84 1746.78 280.97 1747.35 307.52 1738.33 310.49 1734.67 310.3 1734.1 283.75 1743.05 280.84 1746.78"/>
 </g>
 ${body}
-<g>
+${ART.f ? `<image href="${ART.f}" x="479.1" y="1719.5" width="516.3" height="85.97"/>` : `<g>
 <text class="b" font-size="25.86" fill="#0f1212" transform="translate(721.84 1745.16)">تابع كل برامج مخرج ثمانية</text>
 <text class="r" font-size="21.05" fill="#0f1212" transform="translate(944.63 1791.44)">عــلى</text>
 <text class="r" font-size="21.05" fill="#0f1212" transform="translate(780.86 1791.44)">و</text>
@@ -220,15 +224,15 @@ ${body}
 <text class="b" font-size="25.86" fill="#fff" transform="translate(804.05 1791.44)">تطبيق ثمانية</text>
 <rect fill="#fdb903" x="${771.02-chW}" y="1763.21" width="${chW}" height="41.09"/>
 <text class="b" font-size="25.86" fill="#0f1212" x="${771.02-8}" y="1791.44" direction="rtl" text-anchor="start">${CH}</text>
-</g>
-<g>
+</g>`}
+${ART.h ? `<image href="${ART.h}" x="583.9" y="206" width="424.4" height="190.97"/>` : `<g>
 <rect x="757.44" y="215.89" width="243.32" height="82.31" fill="#0f1212" transform="translate(13.52 -42.37) rotate(2.78)"/>
 <rect fill="#fdb90e" x="586.17" y="289.54" width="419.85" height="87.17" transform="translate(-18.77 48.97) rotate(-3.48)"/>
 <text class="b" font-size="72.88" fill="#0f1212"><tspan x="595.64" y="356.49">هذا الأسبــــوع</tspan></text>
 <path fill="#ed4732" d="M710.8,215.11c-5.39-1.42-10.92-1.88-16.43-1.35-19.54,1.87-36.04,15.86-41.04,34.82-6.61,25.07,8.4,50.85,33.47,57.47,5.39,1.42,10.92,1.88,16.43,1.35,19.54-1.87,36.04-15.86,41.04-34.82,6.61-25.07-8.4-50.85-33.47-57.47ZM702.53,300.01c-4.64.44-9.29.06-13.83-1.14-21.12-5.57-33.76-27.28-28.19-48.4,4.21-15.970,18.1-27.75,34.56-29.33,4.64-.44,9.29-.06,13.83,1.14,10.21,2.69,18.77,9.22,24.1,18.37,5.33,9.15,6.78,19.82,4.09,30.03-4.21,15.97-18.1,27.75-34.57,29.33Z"/>
 <polygon fill="#ed4732" points="686.89 283.29 721.89 258.37 682.8 240.53 686.89 283.29"/>
 <text class="r" font-size="50.72" fill="#fff" transform="translate(768.84 264.08)">وشـــ نشرنا</text>
-</g>
+</g>`}
 </svg>`;
 }
 
