@@ -1,0 +1,29 @@
+name: تحديث ستوري الأسبوع
+
+on:
+  schedule:
+    - cron: '0 15 * * 4'   # كل خميس 6 مساءً بتوقيت السعودية
+  workflow_dispatch:        # تشغيل يدوي من تبويب Actions
+  push:
+    paths: ['clips/**', 'index.html']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/update.mjs
+      - run: npm i playwright@1.47.2 && npx playwright install --with-deps chromium
+      - run: node scripts/render.mjs
+      - name: Commit
+        run: |
+          git config user.name "weekly-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add episodes.json story.png
+          git diff --cached --quiet || git commit -m "ستوري الأسبوع $(date +%F)"
+          git push
