@@ -1,46 +1,60 @@
-// يجلب حلقات آخر 7 أيام من قناة مخرج ثمانية ويكتبها في episodes.json
-import { writeFileSync, existsSync } from 'node:fs';
+// Pulls this week's long episodes from the YouTube channel feed and saves data/week.json + thumbnails.
+import { writeFile, mkdir, readdir, unlink } from "node:fs/promises"
 
-const HANDLE = 'thmanyahexit';
-const DAYS = 7;
-const UA = { 'User-Agent': 'Mozilla/5.0', 'Accept-Language': 'ar' };
+const CHANNEL_ID = "UC-EAaNIDtW85oo7eDU1tlnQ"
+const DAYS = 7
+const SHOWS = ["وش كنا نقول", "سري للغاية", "من راعي السالفة", "هذي قائمتي"]
+const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]
 
-async function channelId() {
-  if (process.env.CHANNEL_ID) return process.env.CHANNEL_ID;
-  const html = await (await fetch(`https://www.youtube.com/@${HANDLE}`, { headers: UA })).text();
-  const m = html.match(/"channelId":"(UC[\w-]{22})"/) || html.match(/channel\/(UC[\w-]{22})/);
-  if (!m) throw new Error('ما قدرت أحدد channelId');
-  return m[1];
+const decode = s => s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+const bare = s => s.replace(/[ً-ٰٟـ؟?]/g, "").replace(/\s+/g, " ").trim()
+const clean = s => s.replace(/[⁦-⁩‎‏]/g, "").replace(/\p{Extended_Pictographic}|️/gu, "").replace(/\s+/g, " ").trim()
+const program = (title, after) => {
+  const hit = SHOWS.find(s => bare(title + " " + after).includes(s))
+  if (hit) return hit
+  if (/فلوق/.test(title + after)) return "فلوقات مخرج"
+  return bare(after).replace(/^بودكاست\s+/, "").replace(/\s+مع\s+.*$/, "").trim() || "مخرج ثمانية"
+}
+const riyadh = d => {
+  const [y, m, day] = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Riyadh", year: "numeric", month: "numeric", day: "numeric" }).format(d).split("-").map(Number)
+  return { y, m, day }
 }
 
-// الشورتس ما نبيها: رابط /shorts/ID يرجع 200 للشورت ويحوّل للفيديو العادي
-async function isShort(id) {
-  const r = await fetch(`https://www.youtube.com/shorts/${id}`, { method: 'HEAD', redirect: 'manual', headers: UA });
-  return r.status === 200;
+const res = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, { headers: { "user-agent": "Mozilla/5.0" } })
+if (!res.ok) throw new Error(`YouTube feed ${res.status}`)
+const xml = await res.text()
+const now = new Date(), from = new Date(now - DAYS * 864e5)
+
+const episodes = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map(m => {
+  const e = m[1]
+  const id = (e.match(/<yt:videoId>([^<]+)</) || [])[1]
+  const link = (e.match(/<link rel="alternate" href="([^"]+)"/) || [])[1] || ""
+  const raw = clean(decode((e.match(/<title>([^<]*)</) || [])[1] || ""))
+  const published = (e.match(/<published>([^<]+)</) || [])[1]
+  const [t, ...rest] = raw.split(" | ")
+  return { id, link, published, title: t.trim(), program: program(t, rest.join(" | ")) }
+}).filter(e => e.id && e.link.includes("/watch?v=") && new Date(e.published) >= from)
+  .sort((a, b) => new Date(a.published) - new Date(b.published))
+
+await mkdir("data/thumbs", { recursive: true })
+for (const f of await readdir("data/thumbs")) if (!episodes.some(e => f === `${e.id}.jpg`)) await unlink(`data/thumbs/${f}`)
+for (const e of episodes) {
+  for (const name of ["maxresdefault", "hqdefault"]) {
+    const r = await fetch(`https://i.ytimg.com/vi/${e.id}/${name}.jpg`)
+    if (r.ok) { await writeFile(`data/thumbs/${e.id}.jpg`, Buffer.from(await r.arrayBuffer())); break }
+  }
 }
 
-const id = await channelId();
-const xml = await (await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`, { headers: UA })).text();
-const to = new Date(), from = new Date(to - DAYS * 864e5);
-const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map(([, e]) => ({
-  id: e.match(/<yt:videoId>(.*?)<\/yt:videoId>/)[1],
-  title: e.match(/<title>([\s\S]*?)<\/title>/)[1].replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
-  published: e.match(/<published>(.*?)<\/published>/)[1],
-}));
-
-const episodes = [];
-for (const e of entries) {
-  if (new Date(e.published) < from) continue;
-  if (await isShort(e.id)) continue;
-  const clip = `clips/${e.id}.mp4`;
-  episodes.push({
-    ...e,
-    url: `https://www.youtube.com/watch?v=${e.id}`,
-    thumb: `https://i.ytimg.com/vi/${e.id}/maxresdefault.jpg`,
-    clip: existsSync(clip) ? clip : null,
-  });
+const a = riyadh(new Date(now - (DAYS - 1) * 864e5)), b = riyadh(now)
+const rangeLabel = a.m === b.m && a.y === b.y
+  ? `${a.day} – ${b.day} ${MONTHS[b.m - 1]} ${b.y}`
+  : `${a.day} ${MONTHS[a.m - 1]}${a.y !== b.y ? " " + a.y : ""} – ${b.day} ${MONTHS[b.m - 1]} ${b.y}`
+const pad = n => String(n).padStart(2, "0")
+const week = {
+  weekOf: `${b.y}-${pad(b.m)}-${pad(b.day)}`, rangeLabel, fetchedAt: now.toISOString(),
+  channel: "https://www.youtube.com/@thmanyahexit",
+  episodes: episodes.map(e => ({ id: e.id, title: e.title, program: e.program, published: e.published,
+    url: `https://www.youtube.com/watch?v=${e.id}`, thumb: `data/thumbs/${e.id}.jpg` })),
 }
-episodes.sort((a, b) => new Date(a.published) - new Date(b.published));
-
-writeFileSync('episodes.json', JSON.stringify({ from, to, channelId: id, episodes }, null, 2));
-console.log(`${episodes.length} حلقة`);
+await writeFile("data/week.json", JSON.stringify(week, null, 2) + "\n")
+console.log(`${episodes.length} episodes · ${rangeLabel}`)
