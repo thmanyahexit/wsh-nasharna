@@ -1,24 +1,24 @@
 {
-  "weekOf": "2026-11-05",
-  "rangeLabel": "30 أكتوبر – 5 نوفمبر 2026",
-  "fetchedAt": "2026-11-05T13:19:03.889Z",
+  "weekOf": "2026-11-13",
+  "rangeLabel": "7 – 13 نوفمبر 2026",
+  "fetchedAt": "2026-11-13T04:02:05.764Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
     {
-      "id": "8QmCbvFH8nU",
-      "title": "ثمانية إعلانات جابت العيد مع إبراهيم القحطاني",
-      "program": "هذي قائمتي",
-      "published": "2026-11-03T15:00:33+00:00",
-      "url": "https://www.youtube.com/watch?v=8QmCbvFH8nU",
-      "thumb": "data/thumbs/8QmCbvFH8nU.jpg"
+      "id": "30xFJrBeh9c",
+      "title": "من راعي السالفة مع البتابيت: أبو عادل وأبو زيد وأبو طلّي",
+      "program": "من راعي السالفة",
+      "published": "2026-11-10T15:00:22+00:00",
+      "url": "https://www.youtube.com/watch?v=30xFJrBeh9c",
+      "thumb": "data/thumbs/30xFJrBeh9c.jpg"
     },
     {
-      "id": "CeTyEmoYP_0",
-      "title": "تسافر بالطيارة ولّا تمسك خط بالسيارة؟",
+      "id": "gzAQSmtnAec",
+      "title": "أخرج العملاق الذي بداخلك مع عبدالعزيز الهديان",
       "program": "وش كنا نقول",
-      "published": "2026-11-04T15:00:32+00:00",
-      "url": "https://www.youtube.com/watch?v=CeTyEmoYP_0",
-      "thumb": "data/thumbs/CeTyEmoYP_0.jpg"
+      "published": "2026-11-11T15:00:12+00:00",
+      "url": "https://www.youtube.com/watch?v=gzAQSmtnAec",
+      "thumb": "data/thumbs/gzAQSmtnAec.jpg"
     }
   ]
 }
