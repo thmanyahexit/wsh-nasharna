@@ -81,7 +81,7 @@ a{color:inherit}
       <button id="resetBtn" type="button">رجّع التعديلات</button>
     </div>
     <div class="out" id="out" hidden></div>
-    <p class="mini">الحلقات تُسحب تلقائياً من قناة <a href="https://www.youtube.com/@thmanyahexit" target="_blank" rel="noopener">مخرج ثمانية</a> كل أسبوع (بدون الشورتس). تظهر آخر ثلاث حلقات، والتصميم يتغير حسب العدد (حلقة، حلقتين، ثلاث). لون البطاقة وشعار البرنامج يجون تلقائياً من اسم البرنامج. كل حلقة لها ستوري خاصة فيها رابطها: بطاقتها ملوّنة والباقي رمادي، بالترتيب من فوق لتحت. مكان ملصق الرابط متروك فاضي، حط ملصق إنستقرام فيه.</p>
+    <p class="mini">الحلقات تُسحب تلقائياً من قناة <a href="https://www.youtube.com/@thmanyahexit" target="_blank" rel="noopener">مخرج ثمانية</a> كل أسبوع (بدون الشورتس). تظهر آخر ثلاث حلقات، والتصميم يتغير حسب العدد (حلقة، حلقتين، ثلاث). لون البطاقة وشعار البرنامج يجون تلقائياً من اسم البرنامج. كل حلقة لها ستوري خاصة فيها رابطها، والبطاقات تنبني وحدة وحدة: الستوري الأولى فيها الحلقة الأولى بس، والثانية تضيف تحتها الحلقة الثانية، وهكذا. البطاقة الجديدة ملوّنة واللي قبلها رمادي. مكان ملصق الرابط متروك فاضي، حط ملصق إنستقرام فيه.</p>
   </div>
 </div>
 
@@ -171,6 +171,7 @@ function buildSVG(withFonts, act = active){
         logo:{h:140, w:250}},
   }[n] || null;
   if (L) cs.forEach((c,i)=>{
+    if (i > act) return;   // build-up: story k shows episodes 1..k only, in the full-week layout
     const y = L.ys[i], x = L.x;
     const th = {x:x+L.th.dx, y:y+L.th.dy, w:L.th.w, h:L.th.h};
     const tagS = L.tagS, tagH = tagS*1.67, tagPad = n===1 ? tagS*0.8 : tagS*0.585;
