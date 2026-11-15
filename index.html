@@ -129,57 +129,21 @@ const fmt = iso => new Date(iso).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn'
 
 const mctx = document.createElement('canvas').getContext('2d');
 const measure = (txt, weight, size) => { mctx.font = `${weight} ${size}px "Thmanyah Sans"`; return mctx.measureText(txt).width; };
-// Justify a title line to the full width: stretch words with kashida (ـ) first, then widen the spaces.
-const MARKS = /[ً-ٰٟ]/, ARABIC = /[ب-ي]/;
-const RIGHT_ONLY = 'اأإآٱدذرزوؤةءـ', ALEFS = 'اأإآٱ';
-function joints(word){   // indexes where a kashida can go (before that letter), best first
-  const ch = [...word], base = ch.map((c,i)=>i).filter(i=>!MARKS.test(ch[i])); const out = [];
-  for (let n = 1; n < base.length; n++){
-    const a = ch[base[n-1]], b = ch[base[n]];
-    if (!ARABIC.test(a) || !ARABIC.test(b) || RIGHT_ONLY.includes(a) || b === 'ء') continue;
-    if (a === 'ل' && ALEFS.includes(b)) continue;
-    let at = base[n-1] + 1; while (at < ch.length && MARKS.test(ch[at])) at++;
-    out.push({at, last: n === base.length-1, fin: 'ةهى'.includes(b)});
-  }
-  const best = out.filter(j=>j.last && !j.fin).concat(out.filter(j=>!j.last).reverse(), out.filter(j=>j.last && j.fin));
-  return best;
-}
-function justify(line, size, width){
-  const words = line.split(' ').filter(Boolean);
-  const sp = measure(' ', 700, size);
-  const add = words.map(()=>({}));   // word -> {charIndex: kashida count}
-  const wOf = i => measure(stretch(words[i], add[i]), 700, size);
-  const widths = words.map((w,i)=>wOf(i));
-  const goal = width - sp*(words.length-1)*1.3;   // leave the spaces a little room to grow too
-  let total = widths.reduce((a,b)=>a+b, 0);
-  const pts = words.map(w=>joints(w));
-  const MAXK = 6, order = words.map((w,i)=>i).sort((a,b)=>words[b].length-words[a].length);
-  const full = new Set();
-  for (let round = 0; round < 3 && total < goal; round++){
-    for (let pass = 0; pass < MAXK && total < goal; pass++){
-      for (const i of order){
-        const j = pts[i][round], key = i+':'+round; if (!j || full.has(key) || total >= goal) continue;
-        add[i][j.at] = (add[i][j.at]||0) + 1;
-        const nw = wOf(i);
-        if (total - widths[i] + nw > goal){ add[i][j.at]--; full.add(key); continue; }   // would overshoot: stop this spot
-        total += nw - widths[i]; widths[i] = nw;
-      }
-    }
-  }
-  const texts = words.map((w,i)=>stretch(w, add[i]));
-  const used = widths.reduce((a,b)=>a+b, 0);
-  const gap = words.length > 1 ? Math.max(sp, (width - used)/(words.length-1)) : 0;
-  return texts.map((t,i)=>({t, w:widths[i], gap}));
-}
-function stretch(word, add){
-  const ch = [...word]; let out = '';
-  ch.forEach((c,i)=>{ if (add[i]) out += 'ـ'.repeat(add[i]); out += c; });
-  return out;
-}
 function wrap(txt, size, maxW){
   const words = txt.split(/\s+/).filter(Boolean); const lines=[]; let cur='';
   for (const w of words){ const t = cur? cur+' '+w : w; if (measure(t,700,size) <= maxW || !cur) cur=t; else { lines.push(cur); cur=w; } }
-  if (cur) lines.push(cur); return lines;
+  if (cur) lines.push(cur);
+  // no lone word on the last line: pull words down from the line above while it still fits
+  for (let n = lines.length - 1; n > 0; n--){
+    let up = lines[n-1].split(' '), dn = lines[n].split(' ');
+    while (dn.length < 2 && up.length > 2){
+      const t = up[up.length-1] + ' ' + dn.join(' ');
+      if (measure(t,700,size) > maxW) break;
+      dn = t.split(' '); up.pop();
+    }
+    lines[n-1] = up.join(' '); lines[n] = dn.join(' ');
+  }
+  return lines;
 }
 
 function cards(){
@@ -233,10 +197,8 @@ function buildSVG(withFonts, act = active){
       + `<image href="${c.thumb}" x="${th.x}" y="${th.y}" width="${th.w}" height="${th.h}" preserveAspectRatio="xMidYMid slice"/>`
       + `<rect x="${textR-tagW}" y="${tagTop}" width="${tagW}" height="${tagH}" fill="#0f1212"/>`
       + `<text x="${textR-tagPad}" y="${tagTop+tagH*0.655}" direction="rtl" text-anchor="start" font-family=${ff} font-weight="900" font-size="${tagS}" fill="#fff">${esc(c.tag)}</text>`
-      + lines.map((l,j)=>{   // each line justified edge to edge (kashida + spaces), word by word from the right
-        let cx = textR + 0.16;
-        return justify(l, size, textW).map(p=>{ const t = `<text x="${cx}" y="${base+j*lh}" direction="rtl" text-anchor="start" font-family=${ff} font-weight="700" font-size="${size}" fill="#0f1212">${esc(p.t)}</text>`; cx -= p.w + p.gap; return t; }).join('');
-      }).join('');
+      + `<text direction="rtl" text-anchor="start" font-family=${ff} font-weight="700" font-size="${size}" fill="#0f1212">`
+      + lines.map((l,j)=>`<tspan x="${textR+0.16}" y="${base+j*lh}">${esc(l)}</tspan>`).join('') + `</text>`;
     const PH = 84.17, px = x+L.pill.dx, py = y+L.pill.dy;
     if (L.logo && c.logo){   // the program logo shows on its card in every story
       // smaller logo: right edge lines up with the thumbnail, centred on the link row
