@@ -130,6 +130,12 @@ const fmt = iso => new Date(iso).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn'
 const mctx = document.createElement('canvas').getContext('2d');
 const measure = (txt, weight, size) => { mctx.font = `${weight} ${size}px "Thmanyah Sans"`; return mctx.measureText(txt).width; };
 function wrap(txt, size, maxW){
+  // a title with a colon breaks right after it when both halves fit on one line each
+  const ci = txt.indexOf(':');
+  if (ci > 0 && ci < txt.length-1){
+    const parts = [txt.slice(0, ci+1).trim(), txt.slice(ci+1).trim()];
+    if (parts.every(t => measure(t,700,size) <= maxW)) return parts;
+  }
   const words = txt.split(/\s+/).filter(Boolean); const lines=[]; let cur='';
   for (const w of words){ const t = cur? cur+' '+w : w; if (measure(t,700,size) <= maxW || !cur) cur=t; else { lines.push(cur); cur=w; } }
   if (cur) lines.push(cur);
@@ -175,7 +181,7 @@ function buildSVG(withFonts, act = active){
     3: {x:72.43, w:930.55, h:350.99, ys:[443.48,843.79,1244.1], th:{dx:408.57, dy:34.18, w:490.2, h:275.9},
         tagR:379.42, tagY:34.18, tagS:18.83, base:116.84, size:32, minX:112, maxLines:2, pill:{dx:49.97, dy:230.02, w:342}, logo:null},
     2: {x:74.73, w:930.55, h:520.69, ys:[489.34,1071.24], th:{dx:400.99, dy:30.22, w:490.2, h:275.9},
-        tagR:375.8, tagY:34.18, tagS:18.83, base:116.85, size:32, minX:115, maxLines:4, pill:{dx:47.97, dy:381.02, w:520},
+        tagR:375.8, tagY:34.18, tagS:18.83, base:116.85, size:32, minX:108, maxLines:2, pill:{dx:47.97, dy:381.02, w:520},
         logo:{h:110, w:260}},
     1: {x:74.73, w:930.55, h:983.53, ys:[468.23], th:{dx:69.25, dy:49.21, w:786.9, h:442.9},
         tagR:863.97, tagY:530.57, tagS:33.85, base:651.25, size:48.19, minX:150, maxLines:2, pill:{dx:68.76, dy:821.63, w:520},
