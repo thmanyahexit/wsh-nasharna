@@ -1,17 +1,9 @@
 {
-  "weekOf": "2026-11-17",
-  "rangeLabel": "11 – 17 نوفمبر 2026",
-  "fetchedAt": "2026-11-17T04:02:54.274Z",
+  "weekOf": "2026-11-18",
+  "rangeLabel": "12 – 18 نوفمبر 2026",
+  "fetchedAt": "2026-11-18T04:05:04.970Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
-    {
-      "id": "30xFJrBeh9c",
-      "title": "من راعي السالفة مع البتابيت: أبو عادل وأبو زيد وأبو طلّي",
-      "program": "من راعي السالفة",
-      "published": "2026-11-10T15:00:22+00:00",
-      "url": "https://www.youtube.com/watch?v=30xFJrBeh9c",
-      "thumb": "data/thumbs/30xFJrBeh9c.jpg"
-    },
     {
       "id": "gzAQSmtnAec",
       "title": "أخرج العملاق الذي بداخلك مع عبدالعزيز الهديان",
