@@ -1,16 +1,16 @@
 {
-  "weekOf": "2026-11-18",
-  "rangeLabel": "12 – 18 نوفمبر 2026",
-  "fetchedAt": "2026-11-18T04:05:04.970Z",
+  "weekOf": "2026-11-19",
+  "rangeLabel": "13 – 19 نوفمبر 2026",
+  "fetchedAt": "2026-11-19T04:07:28.305Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
     {
-      "id": "gzAQSmtnAec",
-      "title": "أخرج العملاق الذي بداخلك مع عبدالعزيز الهديان",
+      "id": "chXmvWixRUo",
+      "title": "تتجرأ تصير أول واحد يشتّي؟",
       "program": "وش كنا نقول",
-      "published": "2026-11-11T15:00:12+00:00",
-      "url": "https://www.youtube.com/watch?v=gzAQSmtnAec",
-      "thumb": "data/thumbs/gzAQSmtnAec.jpg"
+      "published": "2026-11-18T12:00:21+00:00",
+      "url": "https://www.youtube.com/watch?v=chXmvWixRUo",
+      "thumb": "data/thumbs/chXmvWixRUo.jpg"
     }
   ]
 }
