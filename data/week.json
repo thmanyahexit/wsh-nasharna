@@ -1,7 +1,7 @@
 {
-  "weekOf": "2026-11-19",
-  "rangeLabel": "13 – 19 نوفمبر 2026",
-  "fetchedAt": "2026-11-19T04:07:28.305Z",
+  "weekOf": "2026-11-20",
+  "rangeLabel": "14 – 20 نوفمبر 2026",
+  "fetchedAt": "2026-11-20T04:03:14.170Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
     {
@@ -11,6 +11,14 @@
       "published": "2026-11-18T12:00:21+00:00",
       "url": "https://www.youtube.com/watch?v=chXmvWixRUo",
       "thumb": "data/thumbs/chXmvWixRUo.jpg"
+    },
+    {
+      "id": "GDIW0pKgfAs",
+      "title": "وجه الشبه بين معلم الشاورما وجرّاح التكميم",
+      "program": "سري للغاية",
+      "published": "2026-11-19T15:00:15+00:00",
+      "url": "https://www.youtube.com/watch?v=GDIW0pKgfAs",
+      "thumb": "data/thumbs/GDIW0pKgfAs.jpg"
     }
   ]
 }
