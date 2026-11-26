@@ -1,17 +1,9 @@
 {
-  "weekOf": "2026-11-25",
-  "rangeLabel": "19 – 25 نوفمبر 2026",
-  "fetchedAt": "2026-11-25T04:18:46.834Z",
+  "weekOf": "2026-11-26",
+  "rangeLabel": "20 – 26 نوفمبر 2026",
+  "fetchedAt": "2026-11-26T04:14:09.558Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
-    {
-      "id": "chXmvWixRUo",
-      "title": "تتجرأ تصير أول واحد يشتّي؟",
-      "program": "وش كنا نقول",
-      "published": "2026-11-18T12:00:21+00:00",
-      "url": "https://www.youtube.com/watch?v=chXmvWixRUo",
-      "thumb": "data/thumbs/chXmvWixRUo.jpg"
-    },
     {
       "id": "GDIW0pKgfAs",
       "title": "وجه الشبه بين معلم الشاورما وجرّاح التكميم",
@@ -19,6 +11,14 @@
       "published": "2026-11-19T15:00:15+00:00",
       "url": "https://www.youtube.com/watch?v=GDIW0pKgfAs",
       "thumb": "data/thumbs/GDIW0pKgfAs.jpg"
+    },
+    {
+      "id": "q2K4h1pD9kU",
+      "title": "هل تحتاج إجازة ولّا أنت كسول بس؟",
+      "program": "وش كنا نقول",
+      "published": "2026-11-25T12:00:22+00:00",
+      "url": "https://www.youtube.com/watch?v=q2K4h1pD9kU",
+      "thumb": "data/thumbs/q2K4h1pD9kU.jpg"
     }
   ]
 }
