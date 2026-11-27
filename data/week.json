@@ -1,17 +1,9 @@
 {
-  "weekOf": "2026-11-26",
-  "rangeLabel": "20 – 26 نوفمبر 2026",
-  "fetchedAt": "2026-11-26T04:14:09.558Z",
+  "weekOf": "2026-11-27",
+  "rangeLabel": "21 – 27 نوفمبر 2026",
+  "fetchedAt": "2026-11-27T04:18:00.776Z",
   "channel": "https://www.youtube.com/@thmanyahexit",
   "episodes": [
-    {
-      "id": "GDIW0pKgfAs",
-      "title": "وجه الشبه بين معلم الشاورما وجرّاح التكميم",
-      "program": "سري للغاية",
-      "published": "2026-11-19T15:00:15+00:00",
-      "url": "https://www.youtube.com/watch?v=GDIW0pKgfAs",
-      "thumb": "data/thumbs/GDIW0pKgfAs.jpg"
-    },
     {
       "id": "q2K4h1pD9kU",
       "title": "هل تحتاج إجازة ولّا أنت كسول بس؟",
